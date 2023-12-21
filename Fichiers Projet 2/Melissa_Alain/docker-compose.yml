@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+    volumes:
+      - ./es-cluster/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - es01_data:/usr/share/elasticsearch/data
+    networks:
+      - es_network
+  es02:
+    # Configuration similaire à es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+    volumes:
+      - ./es-cluster/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - es02_data:/usr/share/elasticsearch/data
+    networks:
+      - es_network
+  es03:
+    # Configuration similaire à es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ES_VERSION}
+    volumes:
+      - ./es-cluster/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - es03_data:/usr/share/elasticsearch/data
+    networks:
+      - es_network
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ES_VERSION}
+    environment:
+      ELASTICSEARCH_HOSTS: http://es01:9200
+    volumes:
+      - ./es-cluster/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+      - es01
+    networks:
+      - es_network
+
+volumes:
+  es01_data:
+  es02_data:
+  es03_data:
+
+networks:
+  es_network:
+    driver: bridge
