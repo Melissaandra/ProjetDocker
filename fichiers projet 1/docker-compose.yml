@@ -1,0 +1,38 @@
+version: '3.1'
+
+networks:
+  frontend_network:
+    driver: bridge
+  backend_network:
+    driver: bridge
+
+services:
+  wordpress:
+    image: melitoto/wordpress_optimized:latest
+    networks:
+      - frontend_network
+      - backend_network
+    ports:
+      - "80:80"
+    depends_on:
+      - mariadb
+    env_file:# Utilisation d'un fichier .env pour les variables d'environnement
+      - .env
+
+  mariadb:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: toto
+      MYSQL_DATABASE: db
+      MYSQL_USER: toto
+      MYSQL_PASSWORD: toto
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - backend_network
+
+volumes:
+  mariadb_data:# Volume pour persister les données de la base de données meme quand le conteneur est stoppé ou supprimé

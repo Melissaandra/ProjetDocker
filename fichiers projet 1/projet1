@@ -1,0 +1,13 @@
+# Utilisation de l'image officielle de WordPress
+FROM wordpress:latest
+
+# Installation d'extensions 
+RUN apt-get update && apt-get install -y \
+    vim \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# Exposer le port 80 pour le serveur web
+EXPOSE 80
+
